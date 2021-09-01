@@ -5,21 +5,60 @@ const cTable = require('console.table');
 inquirer
   .prompt([
     {
-      name: "user_name",
-      type: "checkbox",
-      message: "What is your name?",
+      name: "tracker_db",
+      type: "input",
+      message: "What would you like to do?",
+    },
+    {
+      name: "department_id",
+      type: "input",
+      message: "What is the name of the department?",
+    },
+    {
+      name: "title",
+      type: "input",
+      message: "What is the name of the role?",
+    },
+    {
+      name: "salary",
+      type: "input",
+      message: "What is the salary of the role?",
+    },
+    {
+      name: "department_id",
+      type: "input",
+      message: "What department does the role belong to?",
+    },
+    {
+      name: "first_name",
+      type: "input",
+      message: "What is the employee's first name?",
+    },
+    {
+      name: "last_name",
+      type: "input",
+      message: "What is the employee's last name?",
+    },
+    {
+      name: "role_id",
+      type: "input",
+      message: "What is the employee's role?",
+    },
+    {
+      name: "manager_id",
+      type: "input",
+      message: "Who is the employee's manager?",
+    },
+    {
+      name: "role_update",
+      type: "list",
+      message: "Which employee's role do you want to update?",
+      choices: []
     },
   ])
   .then((answers) => {
-    // Use user feedback for... whatever!!
+    console.info('Answers:', answers);
   })
-  .catch((error) => {
-    if (error.isTtyError) {
-      // Prompt couldn't be rendered in the current environment
-    } else {
-      // Something else went wrong
-    }
-  });
 
 const db = mysql.createConnection(
   {
