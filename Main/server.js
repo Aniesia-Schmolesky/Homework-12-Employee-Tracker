@@ -5,10 +5,10 @@ const cTable = require('console.table');
 inquirer
   .prompt([
     {
-      name: "tracker_db",
+     name: "tracker",
       type: "input",
       message: "What would you like to do?",
-    },
+     },
     {
       name: "department_id",
       type: "input",
