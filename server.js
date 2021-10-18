@@ -1,10 +1,22 @@
 const inquirer = require('inquirer');
-const mysql = require('mysql');
-const cTable = require('console.table');
+const mysql = require('mysql2');
+const ct = require('console.table');
 
-const db = require('./config/connection');
+require('dotenv').config()
 
-function beginPrompt() {
+const connection = mysql.createConnection({
+  host: 'localhost',
+  user: 'root',
+  password: process.env.DB_PASSWORD,
+  database: 'tracker_db'
+});
+connection.connect(err => {
+  if (err) throw err;
+  console.log("Connected to the employee database.");
+  employeePrompts();
+});
+
+const employeePrompts = () => {
   inquirer.prompt([{
     type: "list",
     message: "Select one of the following:",
@@ -54,20 +66,20 @@ function beginPrompt() {
 
 const viewAllEmployees = () => {
   connection.query(
-    'SELECT employee.id, first_name, last_name, title, salary, dept_name, manager_id FROM ((department JOIN roles ON department.id = roles.department_id) JOIN employee ON roles.id = employee.role_id);',
+    'SELECT employee.id, first_name, last_name, title, salary, department_name, manager_id FROM ((department JOIN roles ON department.id = positions.department_id) JOIN employee ON positions.id = employee.position_id);',
     function (err, res) {
       if (err) throw err;
       console.table(res);
-      employeeMenu();
+      employeePrompts();
     }
   );
 };
 
 const viewAllPositions = () => {
-  connection.query('SELECT * FROM roles', function (err, res) {
+  connection.query('SELECT * FROM positions', function (err, res) {
     if (err) throw err;
     console.table(res);
-    employeeMenu();
+    employeePrompts();
   });
 };
 
@@ -75,7 +87,7 @@ const viewDepartments = () => {
   connection.query('SELECT * FROM department', function (err, res) {
     if (err) throw err;
     console.table(res);
-    employeeMenu();
+    employeePrompts();
   });
 };
 
@@ -104,11 +116,11 @@ const addEmployee = () => {
     .then(answer => {
       connection.query(
         'INSERT INTO employee (first_name, last_name, position_id, manager_id) VALUES (?, ?, ?, ?)',
-        [answer.firstName, answer.lastName, answer.roleId, answer.managerId],
+        [answer.firstName, answer.lastName, answer.positionId, answer.managerId],
         function (err, res) {
           if (err) throw err;
-          console.log(chalk.blue.bgRed.bold('Employee added to the database.'));
-          employeeMenu();
+          console.log('Employee added to the database.');
+          employeePrompts();
         }
       );
     });
@@ -131,8 +143,8 @@ const updateEmployeePosition = () => {
         [answer.roleId, answer.id],
         function (err, res) {
           if (err) throw err;
-          console.log(chalk.blue.bgRed.bold('Employee position updated in the database.'));
-          employeeMenu();
+          console.log('Employee position updated in the database.');
+          employeePrompts();
         }
       );
     });
@@ -150,19 +162,19 @@ const addPosition = () => {
         message: 'Position salary:',
       },
       {
-        name: 'deptId',
+        name: 'departmentId',
         type: 'input',
         message: 'Department ID number:',
       },
     ])
     .then(answer => {
       connection.query(
-        'INSERT INTO roles (title, salary, department_id) VALUES (?, ?, ?)',
-        [answer.titlePosition, answer.salary, answer.deptId],
+        'INSERT INTO positions (title, salary, department_id) VALUES (?, ?, ?)',
+        [answer.titlePosition, answer.salary, answer.departmentId],
         function (err, res) {
           if (err) throw err;
-          console.log(chalk.blue.bgRed.bold('Position added to the database.'));
-          employeeMenu();
+          console.log('Position added to the database.');
+          employeePrompts();
         }
       );
     });
@@ -175,12 +187,12 @@ const addDepartment = () => {
     }, ])
     .then(answer => {
       connection.query(
-        'INSERT INTO department (dept_name) VALUES (?)',
+        'INSERT INTO department (department_name) VALUES (?)',
         [answer.department],
         function (err, res) {
           if (err) throw err;
-          console.log(chalk.blue.bgRed.bold('Department added to the database.'));
-          employeeMenu();
+          console.log('Department added to the database.');
+          employeePrompts();
         }
       );
     });
