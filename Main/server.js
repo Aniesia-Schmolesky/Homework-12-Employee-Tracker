@@ -113,3 +113,75 @@ const addEmployee = () => {
       );
     });
 };
+const updateEmployeePosition = () => {
+  inquirer.prompt([{
+        name: 'id',
+        type: 'input',
+        message: 'Employee id:',
+      },
+      {
+        name: 'positionId',
+        type: 'input',
+        message: 'Position id:',
+      },
+    ])
+    .then(answer => {
+      connection.query(
+        'UPDATE employee SET position_id=? WHERE id=?',
+        [answer.roleId, answer.id],
+        function (err, res) {
+          if (err) throw err;
+          console.log(chalk.blue.bgRed.bold('Employee position updated in the database.'));
+          employeeMenu();
+        }
+      );
+    });
+};
+
+const addPosition = () => {
+  inquirer.prompt([{
+        name: 'titlePosition',
+        type: 'input',
+        message: 'Title of position:',
+      },
+      {
+        name: 'salary',
+        type: 'input',
+        message: 'Position salary:',
+      },
+      {
+        name: 'deptId',
+        type: 'input',
+        message: 'Department ID number:',
+      },
+    ])
+    .then(answer => {
+      connection.query(
+        'INSERT INTO roles (title, salary, department_id) VALUES (?, ?, ?)',
+        [answer.titlePosition, answer.salary, answer.deptId],
+        function (err, res) {
+          if (err) throw err;
+          console.log(chalk.blue.bgRed.bold('Position added to the database.'));
+          employeeMenu();
+        }
+      );
+    });
+};
+const addDepartment = () => {
+  inquirer.prompt([{
+      name: 'department',
+      type: 'input',
+      message: 'Name of department:',
+    }, ])
+    .then(answer => {
+      connection.query(
+        'INSERT INTO department (dept_name) VALUES (?)',
+        [answer.department],
+        function (err, res) {
+          if (err) throw err;
+          console.log(chalk.blue.bgRed.bold('Department added to the database.'));
+          employeeMenu();
+        }
+      );
+    });
+};
