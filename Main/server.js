@@ -51,3 +51,65 @@ function beginPrompt() {
     }
   });
 };
+
+const viewAllEmployees = () => {
+  connection.query(
+    'SELECT employee.id, first_name, last_name, title, salary, dept_name, manager_id FROM ((department JOIN roles ON department.id = roles.department_id) JOIN employee ON roles.id = employee.role_id);',
+    function (err, res) {
+      if (err) throw err;
+      console.table(res);
+      employeeMenu();
+    }
+  );
+};
+
+const viewAllPositions = () => {
+  connection.query('SELECT * FROM roles', function (err, res) {
+    if (err) throw err;
+    console.table(res);
+    employeeMenu();
+  });
+};
+
+const viewDepartments = () => {
+  connection.query('SELECT * FROM department', function (err, res) {
+    if (err) throw err;
+    console.table(res);
+    employeeMenu();
+  });
+};
+
+const addEmployee = () => {
+  inquirer.prompt([{
+        name: 'firstName',
+        type: 'input',
+        message: "Employee's first name:",
+      },
+      {
+        name: 'lastName',
+        type: 'input',
+        message: "Employee's last name:",
+      },
+      {
+        name: 'positionId',
+        type: 'input',
+        message: "Employee's position id:",
+      },
+      {
+        name: 'managerId',
+        type: 'input',
+        message: "Manager's Id:",
+      },
+    ])
+    .then(answer => {
+      connection.query(
+        'INSERT INTO employee (first_name, last_name, position_id, manager_id) VALUES (?, ?, ?, ?)',
+        [answer.firstName, answer.lastName, answer.roleId, answer.managerId],
+        function (err, res) {
+          if (err) throw err;
+          console.log(chalk.blue.bgRed.bold('Employee added to the database.'));
+          employeeMenu();
+        }
+      );
+    });
+};
