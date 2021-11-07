@@ -17,7 +17,7 @@ connection.connect(err => {
 });
 
 const employeePrompts = () => {
-  inquirer.prompt([{
+  inquirer.prompt({
     type: "list",
     message: "Select one of the following:",
     name: "choice",
@@ -30,8 +30,8 @@ const employeePrompts = () => {
       "View all Departments?",
       "Add another Department?",
       "Exit"
-    ]
-  }])
+    ],
+  })
   .then(response => {
     switch (response.menu) {
       case 'View all employees':
@@ -66,7 +66,7 @@ const employeePrompts = () => {
 
 const viewAllEmployees = () => {
   connection.query(
-    'SELECT employee.id, first_name, last_name, title, salary, department_name, manager_id FROM ((department JOIN roles ON department.id = positions.department_id) JOIN employee ON positions.id = employee.position_id);',
+    'SELECT employee.id, first_name, last_name, title, salary, department_name, manager_id FROM ((department JOIN positions ON department.id = positions.department_id) JOIN employee ON positions.id = employee.position_id);',
     function (err, res) {
       if (err) throw err;
       console.table(res);
@@ -140,7 +140,7 @@ const updateEmployeePosition = () => {
     .then(answer => {
       connection.query(
         'UPDATE employee SET position_id=? WHERE id=?',
-        [answer.roleId, answer.id],
+        [answer.positionId, answer.id],
         function (err, res) {
           if (err) throw err;
           console.log('Employee position updated in the database.');
