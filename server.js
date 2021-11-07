@@ -74,6 +74,7 @@ const viewAllEmployees = () => {
     }
   );
 };
+// viewAllEmployees()
 
 const viewAllPositions = () => {
   connection.query('SELECT * FROM positions', function (err, res) {
@@ -82,6 +83,7 @@ const viewAllPositions = () => {
     employeePrompts();
   });
 };
+// viewAllPositions()
 
 const viewDepartments = () => {
   connection.query('SELECT * FROM department', function (err, res) {
@@ -90,7 +92,7 @@ const viewDepartments = () => {
     employeePrompts();
   });
 };
-
+// viewDepartments()
 const addEmployee = () => {
   inquirer.prompt([{
         name: 'firstName',
