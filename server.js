@@ -73,8 +73,9 @@ const employeePrompts = () => {
 const viewAllEmployees = () => {
   console.log("view all employees")
   connection.query(
-    'SELECT employee.id, first_name, last_name, title, salary, department_name, manager_id FROM ((department JOIN positions ON department.id = positions.department_id) JOIN employee ON positions.id = employee.position_id);',
+    'SELECT * FROM employee',
     function (err, res) {
+      console.log("working?");
       if (err) throw err;
       console.table(res);
       employeePrompts();
@@ -82,6 +83,7 @@ const viewAllEmployees = () => {
   );
 };
 // viewAllEmployees()
+// 'SELECT employee.id, first_name, last_name, title, salary, department_name, manager_id FROM ((department JOIN positions ON department.id = positions.department_id) JOIN employee ON positions.id = employee.position_id);',
 
 const viewAllPositions = () => {
   connection.query('SELECT * FROM positions', function (err, res) {
