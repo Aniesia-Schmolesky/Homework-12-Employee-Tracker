@@ -1,6 +1,6 @@
 const inquirer = require('inquirer');
 const mysql = require('mysql2');
-const ct = require('console.table');
+// const ct = require('console.table');
 
 require('dotenv').config()
 
@@ -17,54 +17,61 @@ connection.connect(err => {
 });
 
 const employeePrompts = () => {
+  console.log("employeePrompts running")
   inquirer.prompt({
     type: "list",
     message: "Select one of the following:",
     name: "choice",
     choices: [
-      "View all Employees?",
-      "Add another Employee?",
-      "Update an Employee's Position?",
-      "View all Positions?",
-      "Add another Position?",
-      "View all Departments?",
-      "Add another Department?",
+      "View all Employees",
+      "Add another Employee",
+      "Update an Employee Position",
+      "View all Positions",
+      "Add another Position",
+      "View all Departments",
+      "Add another Department",
       "Exit"
     ],
   })
   .then(response => {
-    switch (response.menu) {
-      case 'View all employees':
+    console.log("response.choice")
+    switch (response.choice) {
+      case 'View all Employees"':
+        console.log("switchcase view all employees")
         viewAllEmployees();
         break;
-      case 'Add another employee':
+      case 'Add another Employee':
         addEmployee();
         break;
-      case 'Update employee position':
+      case 'Update an Employee Position':
         updateEmployeePosition();
         break;
-      case 'View all postions':
+      case 'View all Positions':
         viewAllPositions();
         break;
-      case 'Add another position':
+      case 'Add another Position':
         addPosition();
         break;
-      case 'View all departments':
+      case 'View all Departments':
         viewDepartments();
         break;
-      case 'Add another department':
+      case 'Add another Department':
         addDepartment();
         break;
       case "Exit":
+        console.log("exit")
         connection.end();
         break;
       default:
-        connection.end();
+        console.log("default")
+        viewAllEmployees();
+        // connection.end();
     }
   });
 };
 
 const viewAllEmployees = () => {
+  console.log("view all employees")
   connection.query(
     'SELECT employee.id, first_name, last_name, title, salary, department_name, manager_id FROM ((department JOIN positions ON department.id = positions.department_id) JOIN employee ON positions.id = employee.position_id);',
     function (err, res) {
@@ -127,6 +134,7 @@ const addEmployee = () => {
       );
     });
 };
+
 const updateEmployeePosition = () => {
   inquirer.prompt([{
         name: 'id',
