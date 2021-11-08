@@ -27,6 +27,7 @@ GitHub Repo: https://github.com/Aniesia-Schmolesky/Homework-12-Employee-Tracker
 ## Installation
 1. After you clone this repo to your local device, create a .gitignore for your node_modules. 
 2. Create your .env for your MySQL information, see example:
+
 ![image](https://user-images.githubusercontent.com/85134150/140676575-34b08426-8806-4ce3-8c06-8cb6d5551d6c.png)
 
 3. Now open your terminal and run:  npm i
